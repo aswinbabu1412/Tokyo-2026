@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tokyo, 25 to 27 September</title>
+<meta name="theme-color" content="#17223B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1F2733;
+    --ink-2: #5C6675;
+    --line: #E3E6EB;
+    --soft: #F3F4F6;
+    --paper: #FFFFFF;
+    --night: #17223B;
+    --night-2: #223055;
+    --fri: #C8412D; --fri-tint: #FBECE8;
+    --sat: #0E7C86; --sat-tint: #E4F3F4;
+    --sun: #B32A6C; --sun-tint: #F9E6EF;
+    --day: var(--fri); --tint: var(--fri-tint);
+    --radius: 10px;
+    --gutter: 62px;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    font-family: "Zen Kaku Gothic New", -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px; line-height: 1.5;
+    color: var(--ink); background: var(--paper);
+  }
+  a { color: inherit; text-decoration: underline; text-decoration-color: var(--day); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 3px; }
+  button { font: inherit; }
+  :focus-visible { outline: 3px solid var(--night); outline-offset: 2px; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 0 18px; }
+
+  /* top bar */
+  .top {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--night); color: #fff;
+  }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 52px; }
+  .top .brand { font-weight: 700; font-size: 17px; letter-spacing: 0.01em; }
+  .top .brand small { font-weight: 400; color: #B8C3DB; margin-left: 8px; font-size: 13px; }
+  .who {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--night-2); color: #fff; border: 1px solid #3B4A73; border-radius: 999px;
+    padding: 5px 12px; cursor: pointer; font-size: 14px; max-width: 46vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .who .dot { width: 8px; height: 8px; border-radius: 50%; background: #7ED6A2; flex: none; }
+  .who.unknown .dot { background: #F0B35A; }
+  .tabs { background: var(--night); border-top: 1px solid #2A3757; }
+  .tabs .wrap { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; padding-left: 10px; padding-right: 10px; }
+  .tabs .wrap::-webkit-scrollbar { display: none; }
+  .tabs a {
+    flex: none; text-decoration: none; color: #B8C3DB; padding: 10px 10px 9px; font-size: 14px; font-weight: 500;
+    border-bottom: 3px solid transparent;
+  }
+  .tabs a.on { color: #fff; border-bottom-color: #fff; }
+  .tabs a[data-day="fri"].on { border-bottom-color: #FF7A66; }
+  .tabs a[data-day="sat"].on { border-bottom-color: #4FD1DB; }
+  .tabs a[data-day="sun"].on { border-bottom-color: #FF7CB8; }
+
+  /* hero */
+  .hero { background: var(--night); color: #fff; padding: 22px 0 26px; }
+  .hero h1 { font-size: 34px; line-height: 1.1; margin: 0 0 10px; font-weight: 700; letter-spacing: -0.01em; }
+  .hero p { margin: 0; color: #C9D2E6; font-size: 16px; max-width: 34em; }
+  .hero .meta { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 16px; font-size: 14px; color: #B8C3DB; }
+  .hero .meta a { text-decoration-color: #4FD1DB; }
+  .banner { background: #FFF4E0; color: #6B4A00; border-bottom: 1px solid #F1DDAE; font-size: 14px; }
+  .banner .wrap { padding: 9px 18px; }
+  .banner code { background: #fff; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+
+  /* sections */
+  section { scroll-margin-top: 96px; }
+  .day { padding: 26px 0 8px; border-top: 8px solid var(--tint); }
+  .day[data-day="fri"] { --day: var(--fri); --tint: var(--fri-tint); }
+  .day[data-day="sat"] { --day: var(--sat); --tint: var(--sat-tint); }
+  .day[data-day="sun"] { --day: var(--sun); --tint: var(--sun-tint); }
+  .day-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .day-head h2 { margin: 0; font-size: 26px; line-height: 1.15; color: var(--day); }
+  .day-head .sunset { font-size: 13px; color: var(--ink-2); white-space: nowrap; }
+  .day .theme { margin: 4px 0 0; color: var(--ink-2); font-size: 15px; }
+  .getting { margin: 14px 0 6px; padding: 12px 14px; background: var(--tint); border-radius: var(--radius); font-size: 14.5px; }
+  .getting b { color: var(--day); }
+
+  /* timeline */
+  .timeline { list-style: none; margin: 12px 0 0; padding: 0; position: relative; }
+  .timeline::before { content: ""; position: absolute; left: 22px; top: 12px; bottom: 12px; width: 2px; background: var(--line); }
+  .stop { position: relative; padding: 10px 0 14px var(--gutter); }
+  .stop .t {
+    position: absolute; left: 0; top: 12px; width: 46px; text-align: center;
+    font-weight: 700; font-size: 13px; color: var(--day); background: var(--paper); line-height: 1.3;
+  }
+  .stop .t::after {
+    content: ""; display: block; width: 10px; height: 10px; border-radius: 50%; background: var(--day);
+    margin: 4px auto 0; box-shadow: 0 0 0 3px var(--paper);
+  }
+  .stop h3 { margin: 0 0 4px; font-size: 17px; line-height: 1.3; font-weight: 700; }
+  .stop h3 a { text-decoration-thickness: 2px; }
+  .stop .notes { margin: 0; font-size: 15px; color: var(--ink); }
+  .stop .links { margin: 6px 0 0; font-size: 14px; color: var(--ink-2); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .stop.alt h3::before { content: "Split option"; display: inline-block; font-size: 11px; font-weight: 500; color: var(--day); background: var(--tint); border-radius: 4px; padding: 1px 6px; margin-right: 8px; vertical-align: 2px; }
+
+  /* reactions */
+  .react { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--line); background: var(--paper);
+    border-radius: 999px; padding: 5px 12px; font-size: 14px; color: var(--ink-2); cursor: pointer; line-height: 1.2;
+  }
+  .chip b { font-weight: 700; color: var(--ink); }
+  .chip[aria-pressed="true"] { border-color: var(--day); background: var(--tint); color: var(--day); }
+  .chip[aria-pressed="true"] b { color: var(--day); }
+  .chip.open { border-color: var(--ink-2); }
+  .chip:active { transform: translateY(1px); }
+  .thread { margin-top: 10px; border-left: 3px solid var(--tint); padding-left: 12px; }
+  .thread[hidden] { display: none; }
+  .msg { padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .msg:last-of-type { border-bottom: 0; }
+  .msg .by { font-size: 13px; color: var(--ink-2); display: flex; gap: 8px; align-items: baseline; }
+  .msg .by b { color: var(--ink); font-weight: 700; }
+  .msg .del { margin-left: auto; background: none; border: 0; color: var(--ink-2); font-size: 13px; cursor: pointer; padding: 0 2px; text-decoration: underline; }
+  .msg p { margin: 2px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .empty { color: var(--ink-2); font-size: 14px; padding: 6px 0; }
+  .compose { display: flex; gap: 8px; align-items: flex-end; margin-top: 8px; }
+  .compose textarea {
+    flex: 1; min-height: 44px; max-height: 160px; resize: vertical; font: inherit; font-size: 15px; padding: 9px 12px;
+    border: 1.5px solid var(--line); border-radius: var(--radius); background: var(--paper); color: var(--ink);
+  }
+  .btn {
+    border: 0; border-radius: var(--radius); padding: 10px 16px; font-weight: 700; font-size: 15px; cursor: pointer;
+    background: var(--day); color: #fff; line-height: 1.2;
+  }
+  .btn.quiet { background: var(--soft); color: var(--ink); }
+  .btn:disabled { opacity: .5; cursor: default; }
+
+  /* swaps + proposals */
+  .swaps { margin: 10px 0 0; padding: 0; list-style: none; }
+  .swaps li { padding: 12px 14px; background: var(--soft); border-radius: var(--radius); margin-bottom: 8px; font-size: 14.5px; }
+  .swaps li b { color: var(--day); }
+  .props { margin-top: 22px; padding-top: 16px; border-top: 1px dashed var(--line); }
+  .props h3 { margin: 0 0 4px; font-size: 19px; }
+  .props .lead { margin: 0 0 10px; color: var(--ink-2); font-size: 14.5px; }
+  .prop { border: 1.5px solid var(--line); border-radius: var(--radius); padding: 12px 14px; margin-bottom: 10px; }
+  .prop h4 { margin: 0; font-size: 16px; }
+  .prop .by { font-size: 13px; color: var(--ink-2); margin: 2px 0 6px; }
+  .prop .why { margin: 0; font-size: 15px; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .prop .rep { display: inline-block; margin-top: 6px; font-size: 13px; color: var(--day); background: var(--tint); border-radius: 4px; padding: 1px 7px; }
+  .prop .react { margin-top: 8px; }
+  .prop .del { background: none; border: 0; color: var(--ink-2); font-size: 13px; cursor: pointer; text-decoration: underline; padding: 0; margin-left: auto; align-self: center; }
+  form.propose { background: var(--tint); border-radius: var(--radius); padding: 14px; margin-top: 8px; }
+  form.propose label { display: block; font-size: 13px; color: var(--ink-2); margin: 10px 0 4px; }
+  form.propose label:first-child { margin-top: 0; }
+  form.propose input, form.propose textarea, form.propose select {
+    width: 100%; font: inherit; font-size: 15px; padding: 9px 12px; border: 1.5px solid var(--line);
+    border-radius: 8px; background: var(--paper); color: var(--ink);
+  }
+  form.propose textarea { min-height: 70px; resize: vertical; }
+  form.propose .btn { margin-top: 12px; }
+
+  /* bookings + practical */
+  .plain { padding: 28px 0 10px; border-top: 8px solid var(--soft); }
+  .plain h2 { margin: 0 0 6px; font-size: 26px; line-height: 1.15; }
+  .plain .lead { margin: 0 0 14px; color: var(--ink-2); font-size: 15px; }
+  .checks { list-style: none; padding: 0; margin: 0; }
+  .checks li { display: grid; grid-template-columns: 30px 1fr; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--line); align-items: start; }
+  .checks input { width: 22px; height: 22px; margin: 2px 0 0; accent-color: var(--night); }
+  .checks .txt { font-size: 15px; }
+  .checks .txt small { display: block; color: var(--ink-2); font-size: 13px; margin-top: 2px; }
+  .checks li.done .main { color: var(--ink-2); text-decoration: line-through; text-decoration-thickness: 1px; }
+  .plain a { text-decoration-color: var(--night); }
+  details { border-top: 1px solid var(--line); }
+  details:last-of-type { border-bottom: 1px solid var(--line); }
+  summary { cursor: pointer; padding: 12px 0; font-weight: 700; font-size: 16px; list-style: none; display: flex; justify-content: space-between; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; color: var(--ink-2); font-weight: 400; }
+  details[open] summary::after { content: "\2013"; }
+  details p { margin: 0 0 12px; font-size: 15px; }
+  .foot { padding: 24px 0 60px; color: var(--ink-2); font-size: 13px; }
+  .foot .sync { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+  /* name sheet + toast */
+  .sheet { position: fixed; inset: 0; background: rgba(23,34,59,.55); display: flex; align-items: flex-end; justify-content: center; z-index: 50; }
+  .sheet[hidden] { display: none; }
+  .sheet .card { background: var(--paper); width: 100%; max-width: 640px; border-radius: 16px 16px 0 0; padding: 22px 18px calc(22px + env(safe-area-inset-bottom)); }
+  .sheet h2 { margin: 0 0 4px; font-size: 20px; }
+  .sheet p { margin: 0 0 12px; color: var(--ink-2); font-size: 14.5px; }
+  .sheet input { width: 100%; font: inherit; font-size: 17px; padding: 11px 12px; border: 1.5px solid var(--line); border-radius: var(--radius); }
+  .sheet .row { display: flex; gap: 8px; margin-top: 12px; }
+  .sheet .btn { flex: 1; background: var(--night); }
+  .toast {
+    position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); background: var(--ink); color: #fff;
+    padding: 10px 16px; border-radius: 999px; font-size: 14px; z-index: 60; max-width: 90vw; text-align: center;
+    opacity: 0; transition: opacity .2s; pointer-events: none;
+  }
+  .toast.show { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+  @media (min-width: 560px) { :root { --gutter: 72px; } .timeline::before { left: 26px; } .stop .t { width: 54px; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Tokyo<small>25 to 27 Sept</small></div>
+    <button class="who unknown" id="whoBtn" data-action="open-name" type="button"><span class="dot"></span><span id="whoName">Add your name</span></button>
+  </div>
+  <nav class="tabs" aria-label="Sections"><div class="wrap">
+    <a href="#fri" data-day="fri">Fri 25</a>
+    <a href="#sat" data-day="sat">Sat 26</a>
+    <a href="#sun" data-day="sun">Sun 27</a>
+    <a href="#bookings">Bookings</a>
+    <a href="#practical">Practical</a>
+  </div></nav>
+</header>
+
+<div class="banner" id="banner" hidden><div class="wrap">Not connected to the shared sheet yet, so anything you add stays on this phone. Set <code>API_URL</code> in index.html to switch it on.</div></div>
+
+<div class="hero"><div class="wrap">
+  <h1>Three days in Tokyo,<br>fifteen of us.</h1>
+  <p>This is the working plan. Tap a stop to say whether you are keen or would rather swap it, leave a comment, or propose something better at the bottom of each day. Everyone sees everything.</p>
+  <div class="meta">
+    <span>8 adults, 7 kids aged 8 to 12</span>
+    <span>Base: Ueno</span>
+    <span>teamLab Planets booked Sat 12:00</span>
+    <a href="Tokyo_Family_Itinerary.pdf">PDF version</a>
+  </div>
+</div></div>
+
+<main id="main"></main>
+
+<div class="wrap foot">
+  <div class="sync">
+    <span id="syncText">Loading the shared notes</span>
+    <button class="btn quiet" type="button" data-action="refresh" style="padding:6px 12px;font-size:13px">Refresh</button>
+  </div>
+  <p>Underlined place names open Google Maps. Times are suggestions, not a timetable. Plan text is edited by Aswin; propose changes and he will fold them in.</p>
+</div>
+
+<div class="sheet" id="nameSheet" hidden>
+  <div class="card">
+    <h2>What should we call you?</h2>
+    <p>Your name goes next to anything you post. It is remembered on this phone only.</p>
+    <input id="nameInput" type="text" maxlength="40" autocomplete="given-name" placeholder="First name">
+    <div class="row">
+      <button class="btn quiet" type="button" data-action="close-name">Cancel</button>
+      <button class="btn" type="button" data-action="save-name">Save name</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+// ===================== SETTINGS =====================
+// Paste the Apps Script web app URL here (ends in /exec). Leave empty to run on one phone only.
+const API_URL = "";
+const POLL_MS = 45000;
+
+// ===================== PLAN DATA =====================
+const mq = q => "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+const cid = c => "https://maps.google.com/?cid=" + c;
+
+const PLAN = {
+  days: [
+    {
+      id: "fri", title: "Friday 25 September", theme: "Ueno, Asakusa and Tokyo Skytree. Nearly everything is walkable or one short train.", sunset: "Sunset 17:35",
+      getting: "<b>Getting around:</b> start on foot from Ueno Park. Ueno to Asakusa is the Ginza line (5 min). Asakusa to Skytree is a 20 minute walk over the Sumida River Walk, or one stop on the Tobu line. Home from Oshiage: Asakusa line to Asakusa, Ginza line to Ueno, about 20 minutes.",
+      stops: [
+        { id: "fri-kahaku", time: "09:00", name: "National Museum of Nature and Science", maps: cid("9910247399912849098"), site: "https://www.kahaku.go.jp/english/", siteLabel: "Museum site",
+          notes: "Two minutes from the Ueno Park exit. Dinosaurs, the 360° theatre, the Japan Gallery. Adults about 630 yen, under-18s free. Allow 2.5 hours." },
+        { id: "fri-zoo", time: "09:30", name: "Ueno Zoo", alt: true, maps: cid("8554787533003198196"), site: "https://www.tokyo-zoo.net/english/ueno/", siteLabel: "Zoo site",
+          notes: "Send half the group here and meet for lunch. Adults 600 yen, kids free. Tigers, gorillas, polar bears, penguins and a petting area. No giant pandas any more; the last two went back to China in January 2026." },
+        { id: "fri-ameyoko", time: "12:15", name: "Ameyoko market", maps: cid("7298938795051699978"), site: mq("PARCO_ya Ueno"), siteLabel: "Parco_ya restaurant floor",
+          notes: "Street food for the brave. For fifteen at tables, use the Parco_ya restaurant floor next to the station. Several halal-marked shops on the market street." },
+        { id: "fri-sensoji", time: "14:15", name: "Senso-ji", maps: cid("7785923974874169613"), site: mq("Kappabashi Dougu Street"), siteLabel: "Kappabashi kitchen street (10 min west)",
+          notes: "Kaminarimon gate, Nakamise snacks (melon pan, ningyo-yaki), incense, omikuji fortune slips for the kids." },
+        { id: "fri-hanayashiki", time: "15:30", name: "Hanayashiki", maps: cid("7760273331863324849"), site: "https://www.hanayashiki.net/", siteLabel: "Park site",
+          notes: "Japan's oldest amusement park, tiny and retro, two minutes behind the temple. One hour is plenty. Entry about 1,200 yen plus rides, or a ride pass." },
+        { id: "fri-walk", time: "16:30", name: "Walk to Skytree", maps: mq("Sumida River Walk"),
+          notes: "20 minutes via the Sumida River Walk with the tower in front of you the whole way. Tobu line from Asakusa if legs are tired." },
+        { id: "fri-skytree", time: "17:00", name: "Tokyo Skytree", maps: cid("9015449659807889194"), site: "https://www.tokyo-skytree.jp/en/", siteLabel: "Book tickets",
+          notes: "Pre-booked Tembo Deck at 350 m. Sunset about 17:35, then the city lights up." },
+        { id: "fri-aquarium", time: "18:15", name: "Sumida Aquarium or Pokémon Center", maps: mq("Sumida Aquarium"), site: mq("Pokemon Center Skytree Town"), siteLabel: "Pokémon Center",
+          notes: "Both inside Skytree Town. Aquarium: penguins and jellyfish, about an hour, open until 20:00 on Fridays. Pokémon Center is free." },
+        { id: "fri-dinner", time: "19:15", name: "Dinner at Tokyo Solamachi", maps: mq("Tokyo Solamachi"),
+          notes: "Restaurant floors on 6F and 7F, and 30F to 31F with views. Big choice, but tables seat about eight, so split into two." }
+      ],
+      swaps: [
+        "<b>Sumo arrivals instead of Hanayashiki.</b> The tournament is on but sold out. On the 25th doors open at 10:30 and top-division bouts start around 14:00, so wrestlers walk in from Ryogoku station between about 13:30 and 15:00. Ueno to Akihabara to Ryogoku is 15 minutes, then a 25 minute riverside walk north to Asakusa. Free.",
+        "<b>Wet weather:</b> longer at the museum, then Skytree Town (aquarium, shops, Solamachi). Skip Hanayashiki."
+      ]
+    },
+    {
+      id: "sat", title: "Saturday 26 September", theme: "teamLab Planets at 12:00, then Odaiba and the bay for sunset.", sunset: "Sunset 17:35",
+      getting: "<b>Getting there:</b> leave Ueno at 10:15. JR Yamanote or Keihin-Tohoku to Yurakucho (8 min), Yurakucho line to Toyosu (8 min), Yurikamome one stop to Shijo-mae. About 45 minutes door to door. Avoid the Toei bus from Tokyo station, it is chronically congested. Home: Yurikamome to Shimbashi (15 min), JR to Ueno (15 min).",
+      stops: [
+        { id: "sat-lunch", time: "11:00", name: "Toyosu Senkyaku Banrai", maps: cid("13148075327762808875"), site: "https://www.toyosu-senkyakubanrai.jp/", siteLabel: "Site",
+          notes: "Early lunch, linked to Shijo-mae by walkway. Edo-style food hall: sushi, ramen, tempura, grilled seafood. Eating before noon beats both the lunch queue here and the entry queue next door." },
+        { id: "sat-planets", time: "12:00", name: "teamLab Planets TOKYO", maps: cid("7918542870314997282"), site: "https://www.teamlab.art/e/planets/", siteLabel: "Official site",
+          notes: "Booked. Shorts or roll-up trousers (knee-deep water in one room), no long skirts (mirror floors). Lockers for shoes and bags. Expect 20 to 30 minutes queueing even with tickets. Allow 2.5 to 3 hours; the Athletics Forest holds kids for ages." },
+        { id: "sat-yurikamome", time: "15:15", name: "Yurikamome to Odaiba", maps: mq("Odaiba-kaihinkoen Station"),
+          notes: "Shijo-mae to Odaiba-kaihinkoen, about 10 minutes. Sit at the front of the driverless train, the kids will fight for it." },
+        { id: "sat-decks", time: "15:30", name: "Decks Tokyo Beach", maps: cid("3398868727054383202"), site: mq("Tokyo Joypolis"), siteLabel: "Joypolis",
+          notes: "Joypolis (Sega indoor park, check ride height limits) for the kids, Legoland Discovery Centre for any who are younger, the terrace with a bridge view for the adults. The Unicorn Gundam statue was removed at the end of August 2026, so DiverCity is now just a mall." },
+        { id: "sat-beach", time: "17:30", name: "Odaiba beach and Rainbow Bridge", maps: mq("Odaiba Marine Park"), site: mq("Statue of Liberty Odaiba"), siteLabel: "Statue of Liberty replica",
+          notes: "Sunset over the bay, then the bridge lights." },
+        { id: "sat-dinner", time: "18:15", name: "Dinner at Aqua City", maps: cid("8688396941645613427"), site: mq("Tokyo Ramen Kokugikan Mai Aqua City"), siteLabel: "Ramen floor",
+          notes: "5F ramen food court: six shops around communal seating, no booking needed for fifteen. Or the Decks restaurants facing the bridge." },
+        { id: "sat-home", time: "19:45", name: "Home via Shimbashi", maps: mq("Shimbashi Station Yurikamome"),
+          notes: "Yurikamome from Daiba, then JR to Ueno. About 40 minutes." }
+      ],
+      swaps: [
+        "<b>Alternative finish:</b> the Tokyo Cruise water bus from Odaiba Kaihin Koen pier to Asakusa takes about 55 minutes past Rainbow Bridge and Skytree, then Ginza line to Ueno in 5 minutes. Check the timetable; the last sailings are late afternoon, so this means leaving Odaiba before sunset.",
+        "<b>Wet weather:</b> this day already works in the rain. Joypolis and Decks are indoors."
+      ]
+    },
+    {
+      id: "sun", title: "Sunday 27 September", theme: "Forest shrine first, then Harajuku, Nintendo, and a sunset over the crossing.", sunset: "Sunset 17:35",
+      getting: "<b>Getting there:</b> JR Yamanote from Ueno to Harajuku, about 30 minutes, leave by 08:40. Everything after that is on foot within Harajuku and Shibuya. Home: Yamanote from Shibuya to Ueno, about 35 minutes.",
+      stops: [
+        { id: "sun-meiji", time: "09:15", name: "Meiji Jingu", maps: cid("10361244767556222835"), site: "https://www.meijijingu.or.jp/en/", siteLabel: "Shrine site",
+          notes: "Forest approach, giant torii, the sake barrel wall, ema wishes. Free. Sunday mornings often have Shinto wedding processions." },
+        { id: "sun-takeshita", time: "10:45", name: "Takeshita Street", maps: cid("14032878377351675573"),
+          notes: "Go before the Sunday crush. Crepes, rainbow candyfloss, Daiso for cheap souvenirs. Agree a meeting point at the far end; it is one narrow street." },
+        { id: "sun-kiddyland", time: "11:45", name: "Kiddy Land", maps: cid("7858405403824591241"), site: "https://www.kiddyland.co.jp/harajuku/", siteLabel: "Store site",
+          notes: "Five floors of character goods on Omotesando, opens 11:00. Set a budget and a 30-minute limit. Each floor has its own till." },
+        { id: "sun-miyashita", time: "12:30", name: "Miyashita Park", maps: cid("6053118120642992574"), site: mq("Shibuya Yokocho Miyashita Park"), siteLabel: "Shibuya Yokocho",
+          notes: "12 minute walk. Lunch at Shibuya Yokocho on the ground floor: many small stalls, easy to spread fifteen people. Then the rooftop park and bouldering wall." },
+        { id: "sun-parco", time: "14:30", name: "Shibuya Parco", maps: cid("1935335699422656795"), site: mq("MAG's PARK Shibuya 109 rooftop"), siteLabel: "Crossing viewpoint (Mag's Park)",
+          notes: "6F: Nintendo TOKYO, Pokémon Center Shibuya, Capcom Store, Jump Shop. Then Hachiko and the crossing." },
+        { id: "sun-sky", time: "17:00", name: "Shibuya Sky", maps: cid("8067212359343678579"), site: "https://www.shibuya-scramble-square.com/sky/", siteLabel: "Book tickets",
+          notes: "Pre-booked. Open-air roof at 229 m over the crossing, sunset about 17:35. Small bags only, lockers provided, no tripods." },
+        { id: "sun-dinner", time: "18:30", name: "Dinner at Shibuya Scramble Square or Hikarie", maps: mq("Shibuya Scramble Square restaurants"),
+          notes: "Restaurant floors in both towers, directly above the station. Yamanote back to Ueno afterwards." }
+      ],
+      swaps: [
+        "<b>Harry Potter morning.</b> Replace Meiji Jingu and Harajuku with the Warner Bros Studio Tour Tokyo at Toshimaen (about 45 minutes from Ueno via Ikebukuro). Book the 09:30 slot, allow four hours, eat there, then Ikebukuro to Shibuya in 20 minutes for Parco and Shibuya Sky. Timed entry, roughly 6,300 to 7,300 yen adults.",
+        "<b>Backup or evening extra:</b> Akihabara is two stops from Ueno. Sunday afternoons the main street is pedestrianised; arcades, crane games and gachapon halls for the kids."
+      ]
+    }
+  ],
+  bookings: [
+    { id: "b-sky", text: "Shibuya Sky, Sunday 27th, 17:00 entry", sub: "Sunday sunset slots sell out first.", link: "https://www.shibuya-scramble-square.com/sky/" },
+    { id: "b-skytree", text: "Tokyo Skytree, Friday 25th, 17:00 timed ticket", sub: "Cheaper booked ahead; weekdays are cheaper than weekends.", link: "https://www.tokyo-skytree.jp/en/" },
+    { id: "b-planets", text: "teamLab Planets, Saturday 26th, 12:00", sub: "Already booked. Confirmation saved to two phones.", link: "https://www.teamlab.art/e/planets/" },
+    { id: "b-dinner", text: "Dinner tables for fifteen, three nights", sub: "Two adjacent tables or a food hall. TableCheck, Tabelog, or the hotel.", link: "https://www.tablecheck.com/en/japan" },
+    { id: "b-wb", text: "Optional: Warner Bros Studio Tour (Harry Potter)", sub: "Only if the kids are fans; replaces Sunday morning.", link: "https://www.wbstudiotour.jp/en/" },
+    { id: "b-ic", text: "Child IC cards for the 6 to 11 year olds", sub: "Passports needed, JR East Travel Service Center at Ueno station.", link: mq("JR EAST Travel Service Center Ueno") },
+    { id: "b-pack", text: "Packing: rain jackets, shorts for Planets, power banks", sub: "Typhoon season. Knee-deep water in one Planets room." }
+  ],
+  practical: [
+    { h: "Moving fifteen people", p: "Nominate a leader and a sweeper. Agree a meeting point and a time at every stop before anyone wanders. Split freely: the kids and the grandparents do not need the same pace, and two groups of seven or eight fit restaurants, lifts and train doors far more easily than one of fifteen. Share live location in the group chat for the three days." },
+    { h: "Trains, cards, taxis", p: "Adults: Suica in Apple or Google Wallet. Kids aged 6 to 11 pay half fare and need a child IC card, issued with passports at the JR East Travel Service Center in Ueno station. Twelve-year-olds pay adult fare. Taxis seat four, so only worth it late at night. Trains beat a chartered minibus everywhere on this route." },
+    { h: "Weather", p: "Late September is 24 to 29°C, humid and showery, and still typhoon season. Each day has a wet-weather line. Indoor anchors: the science museum, Sumida Aquarium, Skytree Town, Planets, Joypolis, Parco and the Shibuya food floors." },
+    { h: "Eating with fifteen", p: "Food halls and food courts are your friend: Solamachi, Senkyaku Banrai, the Aqua City ramen floor, Shibuya Yokocho, department store restaurant floors. Chains that take groups: Kura Sushi and Sushiro (book in the app), Gyu-Kaku yakiniku, Saizeriya. Convenience-store breakfasts are excellent and fast. Carry a small towel and hand sanitiser." },
+    { h: "Numbers", p: "Police 110. Ambulance and fire 119. Japan Visitor Hotline (JNTO, 24 hours, English) 050-3816-2787. Most stations have a staffed office that will help with a lost card or a lost child." }
+  ]
+};
+
+// ===================== STATE =====================
+const store = { rows: [], lastSync: null, syncing: false };
+let state = reduce([]);
+let myName = localStorage.getItem("tokyo_name") || "";
+let pending = null; // action waiting for a name
+const open = new Set(); // open comment threads
+
+function reduce(rows) {
+  const s = { comments: {}, votes: {}, proposals: [], checks: {}, deleted: new Set() };
+  const sorted = rows.slice().sort((a, b) => (a.ts > b.ts ? 1 : a.ts < b.ts ? -1 : 0));
+  for (const r of sorted) if (r.type === "delete") s.deleted.add(r.key);
+  for (const r of sorted) {
+    const p = r.payload || {};
+    if (r.type === "comment" && !s.deleted.has(r.id)) {
+      (s.comments[r.key] = s.comments[r.key] || []).push({ id: r.id, name: r.name, text: String(p.text || ""), ts: r.ts });
+    } else if (r.type === "vote") {
+      const v = s.votes[r.key] = s.votes[r.key] || {};
+      if (p.v === "none") delete v[r.name]; else v[r.name] = p.v;
+    } else if (r.type === "proposal" && !s.deleted.has(r.id)) {
+      s.proposals.push({ id: r.id, day: r.key, name: r.name, ts: r.ts, title: String(p.title || ""), why: String(p.why || ""), link: String(p.link || ""), replaces: String(p.replaces || "") });
+    } else if (r.type === "check") {
+      s.checks[r.key] = { done: !!p.done, name: r.name, ts: r.ts };
+    }
+  }
+  return s;
+}
+
+function counts(key) {
+  const v = state.votes[key] || {};
+  let keen = 0, swap = 0, back = 0;
+  for (const n in v) { if (v[n] === "keen") keen++; else if (v[n] === "swap") swap++; else if (v[n] === "back") back++; }
+  return { keen, swap, back, mine: v[myName] || "none" };
+}
+
+// ===================== RENDER =====================
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const stopName = id => { for (const d of PLAN.days) for (const st of d.stops) if (st.id === id) return st.name; return ""; };
+
+function when(ts) {
+  const t = new Date(ts); const diff = (Date.now() - t.getTime()) / 1000;
+  if (diff < 60) return "just now";
+  if (diff < 3600) return Math.floor(diff / 60) + " min ago";
+  if (diff < 86400) return Math.floor(diff / 3600) + " h ago";
+  return t.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" });
+}
+
+function renderSkeleton() {
+  let h = "";
+  for (const d of PLAN.days) {
+    h += `<section class="day" id="${d.id}" data-day="${d.id}"><div class="wrap">
+      <div class="day-head"><h2>${d.title}</h2><span class="sunset">${d.sunset}</span></div>
+      <p class="theme">${d.theme}</p>
+      <div class="getting">${d.getting}</div>
+      <ol class="timeline">`;
+    for (const st of d.stops) {
+      h += `<li class="stop${st.alt ? " alt" : ""}" id="stop-${st.id}">
+        <div class="t">${st.time}</div>
+        <h3><a href="${st.maps}" target="_blank" rel="noopener">${esc(st.name)}</a></h3>
+        <p class="notes">${esc(st.notes)}</p>
+        ${st.site ? `<p class="links"><a href="${st.site}" target="_blank" rel="noopener">${esc(st.siteLabel || "Site")}</a></p>` : ""}
+        <div class="react">
+          <button class="chip" type="button" data-action="vote" data-key="${st.id}" data-v="keen" aria-pressed="false">Keen <b data-count="keen">0</b></button>
+          <button class="chip" type="button" data-action="vote" data-key="${st.id}" data-v="swap" aria-pressed="false">Rather swap <b data-count="swap">0</b></button>
+          <button class="chip" type="button" data-action="toggle-thread" data-key="${st.id}">Comments <b data-count="c">0</b></button>
+        </div>
+        <div class="thread" data-thread="${st.id}" hidden>
+          <div class="msgs"></div>
+          <div class="compose">
+            <textarea rows="1" placeholder="Add a comment" aria-label="Comment on ${esc(st.name)}"></textarea>
+            <button class="btn" type="button" data-action="post-comment" data-key="${st.id}">Post</button>
+          </div>
+        </div>
+      </li>`;
+    }
+    h += `</ol>
+      <ul class="swaps">${d.swaps.map(s => `<li>${s}</li>`).join("")}</ul>
+      <div class="props">
+        <h3>Proposed changes for ${d.title.split(" ")[0]}</h3>
+        <p class="lead">Swap a stop, add one, or move a time. Others can back it.</p>
+        <div class="plist" data-plist="${d.id}"></div>
+        <form class="propose" data-day="${d.id}">
+          <label for="pt-${d.id}">What do you propose?</label>
+          <input id="pt-${d.id}" name="title" maxlength="80" required placeholder="e.g. Kirby Cafe for dinner instead of Solamachi">
+          <label for="pr-${d.id}">Does it replace a stop?</label>
+          <select id="pr-${d.id}" name="replaces"><option value="">No, it is an extra</option>${d.stops.map(s => `<option value="${s.id}">${esc(s.time + " " + s.name)}</option>`).join("")}</select>
+          <label for="pw-${d.id}">Why, and anything we need to know</label>
+          <textarea id="pw-${d.id}" name="why" maxlength="600" placeholder="Cost, booking, how long it takes, who it suits"></textarea>
+          <label for="pl-${d.id}">Link (optional)</label>
+          <input id="pl-${d.id}" name="link" type="url" placeholder="https://">
+          <button class="btn" type="submit">Propose it</button>
+        </form>
+      </div>
+    </div></section>`;
+  }
+  h += `<section class="plain" id="bookings"><div class="wrap">
+    <h2>Bookings</h2>
+    <p class="lead">Tick things off as they are done. Everyone sees who ticked what.</p>
+    <ul class="checks">${PLAN.bookings.map(b => `<li id="chk-${b.id}">
+      <input type="checkbox" id="in-${b.id}" data-action="check" data-key="${b.id}" aria-describedby="sub-${b.id}">
+      <label class="txt" for="in-${b.id}"><span class="main">${esc(b.text)}</span>${b.link ? ` <a href="${b.link}" target="_blank" rel="noopener">Open</a>` : ""}<small id="sub-${b.id}">${esc(b.sub || "")}<span data-by></span></small></label>
+    </li>`).join("")}</ul>
+  </div></section>`;
+  h += `<section class="plain" id="practical"><div class="wrap">
+    <h2>Practical</h2>
+    <p class="lead">The bits that make fifteen people on the Yamanote line work.</p>
+    ${PLAN.practical.map(x => `<details><summary>${esc(x.h)}</summary><p>${esc(x.p)}</p></details>`).join("")}
+  </div></section>`;
+  document.getElementById("main").innerHTML = h;
+}
+
+function renderState() {
+  for (const d of PLAN.days) {
+    for (const st of d.stops) {
+      const li = document.getElementById("stop-" + st.id); if (!li) continue;
+      const c = counts(st.id);
+      li.querySelector('[data-count="keen"]').textContent = c.keen;
+      li.querySelector('[data-count="swap"]').textContent = c.swap;
+      li.querySelector('[data-v="keen"]').setAttribute("aria-pressed", c.mine === "keen");
+      li.querySelector('[data-v="swap"]').setAttribute("aria-pressed", c.mine === "swap");
+      const cm = state.comments[st.id] || [];
+      li.querySelector('[data-count="c"]').textContent = cm.length;
+      li.querySelector('[data-action="toggle-thread"]').classList.toggle("open", open.has(st.id));
+      const th = li.querySelector(".thread"); th.hidden = !open.has(st.id);
+      th.querySelector(".msgs").innerHTML = cm.length ? cm.map(m => msgHtml(m)).join("") : `<div class="empty">No comments yet. Say what you think of this one.</div>`;
+    }
+    const pl = document.querySelector(`[data-plist="${d.id}"]`);
+    const ps = state.proposals.filter(p => p.day === d.id);
+    pl.innerHTML = ps.length ? ps.map(p => propHtml(p)).join("") : `<div class="empty">Nothing proposed yet. Got a better idea? Add it below.</div>`;
+  }
+  for (const b of PLAN.bookings) {
+    const li = document.getElementById("chk-" + b.id); const ck = state.checks[b.id];
+    const done = !!(ck && ck.done);
+    li.classList.toggle("done", done);
+    li.querySelector("input").checked = done;
+    li.querySelector("[data-by]").textContent = done ? ` Ticked by ${ck.name}, ${when(ck.ts)}.` : "";
+  }
+  document.getElementById("syncText").textContent = store.syncing ? "Syncing" : (store.lastSync ? "Updated " + when(store.lastSync) : (API_URL ? "Not synced yet" : "Saved on this phone only"));
+}
+
+function msgHtml(m) {
+  const mine = m.name === myName;
+  return `<div class="msg"><div class="by"><b>${esc(m.name)}</b><span>${when(m.ts)}</span>${mine ? `<button class="del" type="button" data-action="delete" data-id="${m.id}">Delete</button>` : ""}</div><p>${esc(m.text)}</p></div>`;
+}
+
+function propHtml(p) {
+  const c = counts("p:" + p.id); const mine = p.name === myName;
+  const cm = state.comments["p:" + p.id] || [];
+  return `<div class="prop" id="prop-${p.id}">
+    <h4>${esc(p.title)}</h4>
+    <div class="by">${esc(p.name)}, ${when(p.ts)}</div>
+    ${p.why ? `<p class="why">${esc(p.why)}</p>` : ""}
+    ${p.replaces ? `<span class="rep">Instead of: ${esc(stopName(p.replaces) || p.replaces)}</span>` : `<span class="rep">Extra stop</span>`}
+    ${p.link ? `<p class="links" style="margin-top:6px"><a href="${esc(p.link)}" target="_blank" rel="noopener">Link</a></p>` : ""}
+    <div class="react">
+      <button class="chip" type="button" data-action="vote" data-key="p:${p.id}" data-v="back" aria-pressed="${c.mine === "back"}">Back this <b>${c.back}</b></button>
+      <button class="chip${open.has("p:" + p.id) ? " open" : ""}" type="button" data-action="toggle-thread" data-key="p:${p.id}">Comments <b>${cm.length}</b></button>
+      ${mine ? `<button class="del" type="button" data-action="delete" data-id="${p.id}">Delete</button>` : ""}
+    </div>
+    <div class="thread" data-thread="p:${p.id}" ${open.has("p:" + p.id) ? "" : "hidden"}>
+      <div class="msgs">${cm.length ? cm.map(m => msgHtml(m)).join("") : `<div class="empty">No comments yet.</div>`}</div>
+      <div class="compose"><textarea rows="1" placeholder="Add a comment" aria-label="Comment on proposal"></textarea><button class="btn" type="button" data-action="post-comment" data-key="p:${p.id}">Post</button></div>
+    </div>
+  </div>`;
+}
+
+function renderWho() {
+  const b = document.getElementById("whoBtn");
+  document.getElementById("whoName").textContent = myName || "Add your name";
+  b.classList.toggle("unknown", !myName);
+}
+
+// ===================== SYNC =====================
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+const localKey = "tokyo_local_log";
+
+async function load(silent) {
+  if (!API_URL) {
+    try { store.rows = JSON.parse(localStorage.getItem(localKey) || "[]"); } catch (e) { store.rows = []; }
+    document.getElementById("banner").hidden = false;
+    state = reduce(store.rows); renderState(); return;
+  }
+  store.syncing = true; if (!silent) renderState();
+  try {
+    const r = await fetch(API_URL, { cache: "no-store" });
+    const j = await r.json();
+    if (j && j.ok) { store.rows = j.rows; store.lastSync = new Date().toISOString(); }
+  } catch (e) {
+    if (!silent) toast("Could not reach the shared sheet. Check your connection.");
+  }
+  store.syncing = false;
+  state = reduce(store.rows); renderState();
+}
+
+async function post(row) {
+  row.ts = new Date().toISOString(); row.id = row.id || uid(); row.name = myName;
+  store.rows.push(row); state = reduce(store.rows); renderState();
+  if (!API_URL) { localStorage.setItem(localKey, JSON.stringify(store.rows)); return true; }
+  try {
+    const r = await fetch(API_URL, { method: "POST", body: JSON.stringify(row) });
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || "save failed");
+    return true;
+  } catch (e) {
+    store.rows = store.rows.filter(x => x !== row); state = reduce(store.rows); renderState();
+    toast("Could not save. Check your connection and try again.");
+    return false;
+  }
+}
+
+// ===================== ACTIONS =====================
+function requireName(fn) {
+  if (myName) return fn();
+  pending = fn; openName();
+}
+function openName() {
+  const s = document.getElementById("nameSheet"); s.hidden = false;
+  const i = document.getElementById("nameInput"); i.value = myName; setTimeout(() => i.focus(), 50);
+}
+function closeName() { document.getElementById("nameSheet").hidden = true; pending = null; }
+function saveName() {
+  const v = document.getElementById("nameInput").value.trim().slice(0, 40);
+  if (!v) { toast("Type a name first."); return; }
+  myName = v; localStorage.setItem("tokyo_name", v);
+  document.getElementById("nameSheet").hidden = true; renderWho(); renderState();
+  const fn = pending; pending = null; if (fn) fn();
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-action]"); if (!el) return;
+  const a = el.dataset.action;
+  if (a === "open-name") return openName();
+  if (a === "close-name") return closeName();
+  if (a === "save-name") return saveName();
+  if (a === "refresh") return load(false);
+  if (a === "toggle-thread") {
+    const k = el.dataset.key; open.has(k) ? open.delete(k) : open.add(k); renderState();
+    if (open.has(k)) { const th = document.querySelector(`[data-thread="${k}"] textarea`); if (th) th.focus(); }
+    return;
+  }
+  if (a === "vote") {
+    const key = el.dataset.key, v = el.dataset.v;
+    requireName(() => {
+      const mine = counts(key).mine;
+      post({ type: "vote", key, payload: { v: mine === v ? "none" : v } });
+    });
+    return;
+  }
+  if (a === "post-comment") {
+    const key = el.dataset.key; const ta = el.parentElement.querySelector("textarea");
+    const text = ta.value.trim(); if (!text) { toast("Write something first."); return; }
+    requireName(async () => { if (await post({ type: "comment", key, payload: { text: text.slice(0, 1000) } })) ta.value = ""; });
+    return;
+  }
+  if (a === "delete") {
+    const id = el.dataset.id;
+    requireName(() => { if (confirm("Delete this?")) post({ type: "delete", key: id, payload: {} }); });
+    return;
+  }
+  if (a === "check") {
+    const key = el.dataset.key; const want = el.checked;
+    requireName(() => post({ type: "check", key, payload: { done: want } }));
+    if (!myName) el.checked = !want;
+    return;
+  }
+});
+
+document.addEventListener("submit", e => {
+  const f = e.target.closest("form.propose"); if (!f) return;
+  e.preventDefault();
+  const title = f.title.value.trim(), why = f.why.value.trim(), link = f.link.value.trim(), replaces = f.replaces.value;
+  if (!title) { toast("Give the proposal a title."); return; }
+  requireName(async () => {
+    if (await post({ type: "proposal", key: f.dataset.day, payload: { title: title.slice(0, 80), why: why.slice(0, 600), link: link.slice(0, 300), replaces } })) {
+      f.reset(); toast("Proposed. Others can back it now.");
+    }
+  });
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.id === "nameInput") saveName();
+});
+
+// active tab highlight
+const tabs = [...document.querySelectorAll(".tabs a")];
+const io = new IntersectionObserver(es => {
+  es.forEach(en => { if (en.isIntersecting) tabs.forEach(t => t.classList.toggle("on", t.getAttribute("href") === "#" + en.target.id)); });
+}, { rootMargin: "-40% 0px -55% 0px" });
+
+// ===================== BOOT =====================
+renderSkeleton(); renderWho(); renderState();
+["fri", "sat", "sun", "bookings", "practical"].forEach(id => { const s = document.getElementById(id); if (s) io.observe(s); });
+load(true);
+setInterval(() => { if (document.visibilityState === "visible") load(true); }, POLL_MS);
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") load(true); });
+</script>
+</body>
+</html>
